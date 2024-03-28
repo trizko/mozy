@@ -9,4 +9,5 @@ name = "mozy"
 crate-type = ["cdylib"]
 
 [dependencies]
+base64 = "0.22.0"
 pyo3 = "0.20.0"
