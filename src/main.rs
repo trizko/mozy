@@ -1,15 +1,18 @@
 use std::fs::File;
 use std::io::{self, Read};
-use base64::{engine::general_purpose::STANDARD, Engine as _};
+use binread::BinReaderExt;
+use binread::{BinRead, io::Cursor};
 
-fn main() -> io::Result<()> {
-    let mut file = File::open("output.mid")?;
-    let mut buffer = Vec::new();
+#[derive(BinRead,Debug)]
+#[br(magic = b"MThd")]
+struct MidiHeader {
+    format: u16,
+    track_count: u16,
+    division: u16,
+}
 
-    file.read_to_end(&mut buffer)?;
-
-    let encoded = STANDARD.encode(&buffer);
-    println!("{}", encoded);
-
-    Ok(())
+fn main() {
+    let mut reader = Cursor::new(File::open("output.mid").unwrap().bytes().collect::<io::Result<Vec<u8>>>().unwrap());
+    let header: MidiHeader = reader.read_ne().unwrap();
+    println!("{:?}", header);
 }
