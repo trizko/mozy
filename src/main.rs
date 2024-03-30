@@ -6,6 +6,7 @@ use binread::{BinRead, io::Cursor};
 #[derive(BinRead,Debug)]
 #[br(magic = b"MThd", big)]
 struct MidiHeader {
+    length: u32,
     format: u16,
     track_count: u16,
     division: u16,
