@@ -56,5 +56,5 @@ fn main() {
     let mut reader = Cursor::new(File::open("output.mid").unwrap().bytes().collect::<io::Result<Vec<u8>>>().unwrap());
     let header: MidiHeader = reader.read_be().unwrap();
     println!("{:?}", header);
-    println!("length = {:?}\nformat = {:?}\ntracks = {:?}\ndelta = {:?}", header.length, header.format, header.track_count, header.delta);
+    println!("length = {:?}\nformat = {:?}\ntracks = {:?}\ndelta = {:?}", header.length, header.format, header.track_count, header.division);
 }
