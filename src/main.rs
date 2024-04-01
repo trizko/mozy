@@ -24,6 +24,8 @@ struct MidiHeader {
 #[derive(BinRead,Debug)]
 #[br(magic = b"MTrk", big)]
 struct MidiTrack {
+    length: u32,
+    #[br(count = length as usize)]
     events: Vec<u8>,
 }
 
