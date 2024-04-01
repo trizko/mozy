@@ -7,13 +7,28 @@ use binread::{BinRead, io::Cursor};
 #[br(big)]
 struct MidiFile {
     pub header: MidiHeader,
+
+    #[br(count = header.track_count as usize)]
     pub tracks: Vec<MidiTrack>,
 }
 
+#[derive(BinRead,Debug)]
+#[br(magic = b"MThd", big)]
+struct MidiHeader {
+    length: u32,
+    format: u16,
+    track_count: u16,
+    division: u16,
+}
+
+#[derive(BinRead,Debug)]
+#[br(magic = b"MTrk", big)]
 struct MidiTrack {
     pub events: Vec<MidiEvent>,
 }
 
+#[derive(BinRead,Debug)]
+#[br(big)]
 enum MidiEvent {
     NoteOn {
         delta_time: u32,
