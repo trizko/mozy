@@ -3,6 +3,8 @@ use std::io::{self, Read};
 use binread::BinReaderExt;
 use binread::{BinRead, io::Cursor};
 
+#[derive(BinRead,Debug)]
+#[br(big)]
 struct MidiFile {
     pub header: MidiHeader,
     pub tracks: Vec<MidiTrack>,
