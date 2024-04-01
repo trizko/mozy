@@ -6,10 +6,10 @@ use binread::{BinRead, io::Cursor};
 #[derive(BinRead,Debug)]
 #[br(big)]
 struct MidiFile {
-    pub header: MidiHeader,
+    header: MidiHeader,
 
     #[br(count = header.track_count as usize)]
-    pub tracks: Vec<MidiTrack>,
+    tracks: Vec<MidiTrack>,
 }
 
 #[derive(BinRead,Debug)]
@@ -24,7 +24,7 @@ struct MidiHeader {
 #[derive(BinRead,Debug)]
 #[br(magic = b"MTrk", big)]
 struct MidiTrack {
-    pub events: Vec<MidiEvent>,
+    events: Vec<u8>,
 }
 
 #[derive(BinRead,Debug)]
