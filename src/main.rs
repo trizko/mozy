@@ -60,18 +60,9 @@ enum MidiEvent {
     },
 }
 
-#[derive(BinRead,Debug)]
-#[br(magic = b"MThd", big)]
-struct MidiHeader {
-    length: u32,
-    format: u16,
-    track_count: u16,
-    division: u16,
-}
 
 fn main() {
     let mut reader = Cursor::new(File::open("output.mid").unwrap().bytes().collect::<io::Result<Vec<u8>>>().unwrap());
-    let header: MidiHeader = reader.read_be().unwrap();
-    println!("{:?}", header);
-    println!("length = {:?}\nformat = {:?}\ntracks = {:?}\ndelta = {:?}", header.length, header.format, header.track_count, header.division);
+    let f: MidiFile = reader.read_be().unwrap();
+    println!("{:?}", f);
 }
