@@ -31,6 +31,13 @@ struct MidiTrack {
 
 #[derive(BinRead,Debug)]
 #[br(big)]
+struct MidiTrackEvent {
+    delta_time: u32,
+    event: MidiEvent,
+}
+
+#[derive(BinRead,Debug)]
+#[br(big)]
 enum MidiEvent {
     NoteOn {
         delta_time: u32,
