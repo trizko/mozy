@@ -71,7 +71,10 @@ enum MidiEvent {
 
 
 fn main() {
-    let mut reader = Cursor::new(File::open("output.mid").unwrap().bytes().collect::<io::Result<Vec<u8>>>().unwrap());
+    let mut file = File::open("output.mid").expect("Failed to open file");
+    let mut buffer = Vec::new();
+    file.read_to_end(&mut buffer).expect("Failed to read file");
+    let mut reader = Cursor::new(buffer);
     let f: MidiFile = reader.read_be().unwrap();
     println!("{:?}", f);
 }
