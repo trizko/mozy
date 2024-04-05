@@ -24,10 +24,10 @@ pub struct MidiHeader {
 #[derive(BinRead)]
 #[br(magic = b"MTrk", big)]
 pub struct MidiTrack {
-    length: u32,
+    pub length: u32,
 
     #[br(parse_with = read_track_events)]
-    events: Vec<TrackEvent>,
+    pub events: Vec<TrackEvent>,
 }
 
 fn read_track_events<R: Read + Seek>(_reader: &mut R, _ro: &ReadOptions, _: ())
@@ -36,14 +36,14 @@ fn read_track_events<R: Read + Seek>(_reader: &mut R, _ro: &ReadOptions, _: ())
     unimplemented!()
 }
 
-struct TrackEvent {
-    delta_time: u32,
-    event: Event,
+pub struct TrackEvent {
+    pub delta_time: u32,
+    pub event: Event,
 }
 
-enum Event {
-    NoteOn { channel: u8, note: u8, velocity: u8 },
-    NoteOff { channel: u8, note: u8, velocity: u8 },
+pub enum Event {
+    _NoteOn { channel: u8, note: u8, velocity: u8 },
+    _NoteOff { channel: u8, note: u8, velocity: u8 },
 }
 
 pub struct MidiParser {
