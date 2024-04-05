@@ -1,7 +1,7 @@
 use std::fs::File;
-use std::io::Read;
+use std::io::{Read, Seek};
 use binread::BinReaderExt;
-use binread::{BinRead, io::Cursor};
+use binread::{BinRead, BinResult, ReadOptions, io::Cursor};
 
 #[derive(BinRead,Debug)]
 #[br(big)]
@@ -26,8 +26,26 @@ struct MidiHeader {
 struct MidiTrack {
     length: u32,
 
-    #[br(count = length as usize)]
-    events: Vec<u8>,
+    #[br(parse_with = read_track_events)]
+    events: Vec<TrackEvent>,
+}
+
+fn read_track_events<R: Read + Seek>(reader: &mut R, ro: &ReadOptions, _: ())
+    -> BinResult<Vec<TrackEvent>>
+{
+    unimplemented!()
+}
+
+#[derive(Debug)]
+struct TrackEvent {
+    delta_time: u32,
+    event: Event,
+}
+
+#[derive(Debug)]
+enum Event {
+    NoteOn { channel: u8, note: u8, velocity: u8 },
+    NoteOff { channel: u8, note: u8, velocity: u8 },
 }
 
 pub struct MidiParser {
