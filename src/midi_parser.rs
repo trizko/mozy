@@ -30,7 +30,7 @@ struct MidiTrack {
     events: Vec<TrackEvent>,
 }
 
-fn read_track_events<R: Read + Seek>(reader: &mut R, ro: &ReadOptions, _: ())
+fn read_track_events<R: Read + Seek>(_reader: &mut R, _ro: &ReadOptions, _: ())
     -> BinResult<Vec<TrackEvent>>
 {
     unimplemented!()
