@@ -44,6 +44,10 @@ pub struct TrackEvent {
 pub enum Event {
     _NoteOn { channel: u8, note: u8, velocity: u8 },
     _NoteOff { channel: u8, note: u8, velocity: u8 },
+    _ControlChange { channel: u8, control: u8, value: u8 },
+    _ProgramChange { channel: u8, program: u8 },
+    _PitchBend { channel: u8, value: u16 },
+    _MetaEvent { delta_time: u32, event_type: u8, data: Vec<u8> },
 }
 
 pub struct MidiParser {
