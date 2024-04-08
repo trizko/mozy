@@ -48,6 +48,7 @@ pub enum Event {
     _ProgramChange { channel: u8, program: u8 },
     _PitchBend { channel: u8, value: u16 },
     _Meta { delta_time: u32, event_type: u8, data: Vec<u8> },
+    _Unknown,
 }
 
 pub struct MidiParser {
