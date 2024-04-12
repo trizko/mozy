@@ -3,7 +3,7 @@ use std::io::{Read, Seek};
 use binread::BinReaderExt;
 use binread::{BinRead, BinResult, ReadOptions, io::Cursor};
 
-#[derive(BinRead)]
+#[derive(BinRead, Debug)]
 #[br(big)]
 pub struct MidiFile {
     pub header: MidiHeader,
@@ -12,7 +12,7 @@ pub struct MidiFile {
     pub tracks: Vec<MidiTrack>,
 }
 
-#[derive(BinRead)]
+#[derive(BinRead, Debug)]
 #[br(magic = b"MThd", big)]
 pub struct MidiHeader {
     pub length: u32,
@@ -21,7 +21,7 @@ pub struct MidiHeader {
     pub division: u16,
 }
 
-#[derive(BinRead)]
+#[derive(BinRead, Debug)]
 #[br(magic = b"MTrk", big)]
 pub struct MidiTrack {
     pub length: u32,
@@ -36,11 +36,13 @@ fn read_track_events<R: Read + Seek>(_reader: &mut R, _ro: &ReadOptions, _: ())
     unimplemented!()
 }
 
+#[derive(Debug)]
 pub struct TrackEvent {
     pub delta_time: u32,
     pub event: Event,
 }
 
+#[derive(Debug)]
 pub enum Event {
     _NoteOn { channel: u8, note: u8, velocity: u8 },
     _NoteOff { channel: u8, note: u8, velocity: u8 },
