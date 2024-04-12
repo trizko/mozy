@@ -3,5 +3,5 @@ use crate::midi_parser::{MidiParser, MidiFile};
 
 fn main() {
     let file: MidiFile = MidiParser::new("output.mid").parse();
-    println!("{}", file.header.track_count);
+    println!("{:?}", file);
 }
