@@ -1,7 +1,6 @@
 use std::fs::File;
 use std::io::{Read, Seek};
-use binread::BinReaderExt;
-use binread::{BinRead, BinResult, ReadOptions, io::Cursor};
+use binread::{BinRead, BinReaderExt, BinResult, ReadOptions, io::Cursor};
 
 #[derive(BinRead, Debug)]
 #[br(big)]
@@ -30,10 +29,53 @@ pub struct MidiTrack {
     pub events: Vec<TrackEvent>,
 }
 
-fn read_track_events<R: Read + Seek>(_reader: &mut R, _ro: &ReadOptions, _: ())
-    -> BinResult<Vec<TrackEvent>>
-{
-    unimplemented!()
+
+fn read_track_events<R: Read + Seek>(reader: &mut R, _ro: &ReadOptions, _: ()) -> BinResult<Vec<TrackEvent>> {
+    let mut events = Vec::new();
+    loop {
+        let delta_time = reader.read_be().unwrap();
+        print!("Delta time: {:?}\n", delta_time);
+        if delta_time == 0 {
+            break;
+        }
+        let event_type: u8 = reader.read_be().unwrap();
+        print!("Event type: {:02X}\n", event_type);
+        let event = match event_type {
+            0x80 => {
+                let channel = reader.read_be().unwrap();
+                let note = reader.read_be().unwrap();
+                let velocity = reader.read_be().unwrap();
+                Event::_NoteOff { channel, note, velocity }
+            }
+            0x90 => {
+                let channel = reader.read_be().unwrap();
+                let note = reader.read_be().unwrap();
+                let velocity = reader.read_be().unwrap();
+                Event::_NoteOn { channel, note, velocity }
+            }
+            0xB0 => {
+                let channel = reader.read_be().unwrap();
+                let control = reader.read_be().unwrap();
+                let value = reader.read_be().unwrap();
+                Event::_ControlChange { channel, control, value }
+            }
+            0xC0 => {
+                let channel = reader.read_be().unwrap();
+                let program = reader.read_be().unwrap();
+                Event::_ProgramChange { channel, program }
+            }
+            0xE0 => {
+                let channel = reader.read_be().unwrap();
+                let value = reader.read_be().unwrap();
+                Event::_PitchBend { channel, value }
+            }
+            _ => {
+                Event::_Unknown
+            }
+        };
+        events.push(TrackEvent { delta_time, event });
+    }
+    Ok(events)
 }
 
 #[derive(Debug)]
