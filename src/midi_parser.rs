@@ -5,11 +5,11 @@ use std::path::Path;
 
 #[derive(BinRead, Debug)]
 #[br(magic = b"MThd")]
-struct MidiHeader {
-    length: u32,
-    format: u16,
+pub struct MidiHeader {
+    pub length: u32,
+    pub format: u16,
     track_count: u16,
-    time_division: u16,
+    pub time_division: u16,
 }
 
 #[derive(BinRead, Debug)]
@@ -22,7 +22,7 @@ struct MidiTrack {
 
 #[derive(Debug)]
 pub struct MidiFile {
-    header: MidiHeader,
+    pub header: MidiHeader,
     tracks: Vec<MidiTrack>,
 }
 
@@ -65,7 +65,7 @@ impl MidiParser {
         let mut cursor = Cursor::new(events);
 
         while cursor.position() < events.len() as u64 {
-            let delta_time = self.read_variable_length_quantity(&mut cursor);
+            let _delta_time = self.read_variable_length_quantity(&mut cursor);
             let event_type = cursor.read_be::<u8>().unwrap();
 
             match event_type {
