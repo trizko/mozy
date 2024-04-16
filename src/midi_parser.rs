@@ -33,11 +33,8 @@ pub struct MidiTrack {
 fn read_track_events<R: Read + Seek>(reader: &mut R, _ro: &ReadOptions, _: ()) -> BinResult<Vec<TrackEvent>> {
     let mut events = Vec::new();
     loop {
-        let delta_time = reader.read_be().unwrap();
+        let delta_time = read_bytes_until_msb_zero(reader).unwrap();
         print!("Delta time: {:?}\n", delta_time);
-        if delta_time == 0 {
-            break;
-        }
         let event_type: u8 = reader.read_be().unwrap();
         print!("Event type: {:02X}\n", event_type);
         let event = match event_type {
@@ -73,15 +70,31 @@ fn read_track_events<R: Read + Seek>(reader: &mut R, _ro: &ReadOptions, _: ()) -
                 Event::_Unknown
             }
         };
-        events.push(TrackEvent { delta_time, event });
+        events.push(TrackEvent { delta_time: delta_time.clone(), event });
+        if events.len() == 3 {
+            break;
+        }
     }
     Ok(events)
 }
 
 #[derive(Debug)]
 pub struct TrackEvent {
-    pub delta_time: u32,
+    pub delta_time: Vec<u8>,
     pub event: Event,
+}
+
+fn read_bytes_until_msb_zero<R: std::io::Read>(reader: &mut R) -> std::io::Result<Vec<u8>> {
+    let mut bytes = Vec::new();
+    loop {
+        let mut byte = [0; 1];
+        reader.read_exact(&mut byte)?;
+        bytes.push(byte[0]);
+        if byte[0] & 0x80 == 0 {
+            break;
+        }
+    }
+    Ok(bytes)
 }
 
 #[derive(Debug)]
