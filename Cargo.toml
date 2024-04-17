@@ -10,4 +10,5 @@ crate-type = ["cdylib"]
 
 [dependencies]
 binread = "2.2.0"
+midly = "0.5.3"
 pyo3 = "0.20.0"
