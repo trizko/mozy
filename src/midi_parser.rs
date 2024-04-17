@@ -127,3 +127,17 @@ impl MidiParser {
         self.data.read_be().unwrap()
     }
 }
+
+#[cfg(test)]
+mod tests {
+    #[test]
+    fn test_parse_midi_with_midly() {
+        use std::fs;
+        use midly::Smf;
+
+        let data = fs::read("output.mid").unwrap();
+        let smf = Smf::parse(&data).unwrap();
+        println!("{:#?}", smf);
+        assert_eq!(true, false);
+    }
+}
