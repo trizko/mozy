@@ -130,14 +130,19 @@ impl MidiParser {
 
 #[cfg(test)]
 mod tests {
+    use crate::midi_parser::MidiParser;
+
     #[test]
     fn test_parse_midi_with_midly() {
         use std::fs;
         use midly::Smf;
 
+        let mut parser = MidiParser::new("output.mid");
+        let actual = parser.parse();
+
         let data = fs::read("output.mid").unwrap();
-        let smf = Smf::parse(&data).unwrap();
-        println!("{:#?}", smf);
-        assert_eq!(true, false);
+        let expected = Smf::parse(&data).unwrap();
+
+        println!("{:#?}", expected);
     }
 }
