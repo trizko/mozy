@@ -25,8 +25,8 @@ pub struct MidiHeader {
 pub struct MidiTrack {
     pub length: u32,
 
-    #[br(parse_with = read_track_events)]
-    pub events: Vec<TrackEvent>,
+    #[br(count = length as usize)]
+    pub events: Vec<u8>,
 }
 
 
