@@ -143,6 +143,22 @@ mod tests {
         let data = fs::read("output.mid").unwrap();
         let expected = Smf::parse(&data).unwrap();
 
-        println!("{:#?}", expected);
+        println!("{:#?}", expected.header);
+    }
+
+    #[test]
+    fn test_compare_parser_header_with_midly() {
+        use std::fs;
+        use midly::Smf;
+
+        let mut parser = MidiParser::new("output.mid");
+        let actual = parser.parse();
+
+        let data = fs::read("output.mid").unwrap();
+        let expected = Smf::parse(&data).unwrap();
+
+        if let midly::Timing::Metrical(timing) = expected.header.timing {
+            assert_eq!(actual.header.division, timing.as_int());
+        }
     }
 }
